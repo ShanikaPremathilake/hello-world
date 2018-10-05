@@ -1,0 +1,151 @@
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Scanner;
+
+import java.text.SimpleDateFormat;
+        import java.util.Calendar;
+        import java.util.Date;
+        import java.util.Scanner;
+
+        import static java.util.Calendar.AM;
+        import static java.util.Calendar.PM;
+
+public class CommonToolkit2
+{
+    public String convertToEnglishFormat(String swedenNumber)
+    {
+        String engFormat = swedenNumber.replace(",", ".");
+        return engFormat;
+    }
+
+    public String getNextDoesTime(Date previousDoesTime, String duration)
+    {
+        int durationHrs = Integer.parseInt(duration.substring(0, duration.length() - 1));
+        long durationMiliSeconds = durationHrs * (3600000);
+        Date nextDoseTime = new Date(previousDoesTime.getTime() + durationMiliSeconds);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(nextDoseTime);
+        Date nextDoesTime = fixSwedenDayLightSaving(calendar);
+
+        return timeFormat(nextDoesTime);
+    }
+
+    private String timeFormat(Date date)
+    {
+        SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a");
+        return timeFormat.format(date);
+    }
+
+    private Date fixSwedenDayLightSaving(Calendar calendar)
+    {
+        if (calendar.get(Calendar.MONTH) == 2 && calendar.get(Calendar.DATE) == getLastSundayOfMonth(2)
+                && calendar.get(Calendar.HOUR_OF_DAY) >= 2)
+        {
+
+            return new Date(calendar.getTimeInMillis() + 3600000); // ad one hour
+        } else if (calendar.get(Calendar.MONTH) == 9 && calendar.get(Calendar.DATE) == getLastSundayOfMonth(9)
+                && calendar.get(Calendar.HOUR_OF_DAY) >= 3)
+        {
+            return new Date(calendar.getTimeInMillis() - 3600000); //
+        }
+        return new Date(calendar.getTimeInMillis());
+    }
+
+    private int getLastSundayOfMonth(int month)
+    {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+        if (dayOfWeek < Calendar.SUNDAY)
+        {
+            calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) - 7 + Calendar.SUNDAY - dayOfWeek);
+        } else
+        {
+            calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + Calendar.SUNDAY - dayOfWeek);
+        }
+        return calendar.get(Calendar.DAY_OF_MONTH);
+    }
+
+    public String getSwedishText(String textWithUnicode)
+    {
+        String swedishText = "";
+        String split[] = textWithUnicode.replace("\\u", ";").split(";");
+        if (split.length > 1)
+        {
+            for (int i = 0; i < split.length; i++)
+            {
+                if (split[i].length() > 0)
+                {
+                    String unicodeDecimal = getUnicodeDecimal(split[i]);
+                    char c = (char) Integer.parseInt(unicodeDecimal);
+                    swedishText += split[i].replace(split[i].substring(0, unicodeDecimal.length()), c + "");
+                }
+            }
+            return swedishText;
+        } else
+        {
+            return textWithUnicode;
+        }
+
+    }
+
+    private String getUnicodeDecimal(String text)
+    {
+        String decimalVal = "";
+        char array[] = text.toCharArray();
+        for (char ch : array)
+        {
+            if(Character.isDigit(ch)) {
+                decimalVal += ch;
+            }else {
+                break;
+            }
+        }
+        return decimalVal;
+    }
+
+    public static void main(String[] args)
+    {
+        CommonToolkit commonToolkit = new CommonToolkit();
+
+        System.out.println("Assignment 01");
+        String swedish = "2,5 ml";
+        String engFormat = commonToolkit.convertToEnglishFormat(swedish);
+        System.out.println("Swdish Format: " + swedish);
+        System.out.println("English Format: " + engFormat);
+        System.out.println();
+
+        System.out.println("Assignment 02");
+        Scanner sc = new Scanner(System.in,"UTF-8");
+        System.out.print("Previous does time(HH:mma): ");
+        String previousTime=sc.nextLine();
+        previousTime=previousTime.replaceAll("\\s+","");
+        System.out.println("Time duration between doses (HH:mm) :");
+        String duration=sc.next();
+
+        sc.close();
+
+        String output;
+        try {
+            // CommonToolkit commonToolkit1 = new CommonToolkit();
+            output = commonToolkit.getNextDoesTime(previousTime, duration);
+        }catch (Exception e){
+            output ="";
+            System.out.println("Inputs are not in the correct format");
+        }
+        System.out.println("Next Does Time : "+output);
+
+        int time=commonToolkit.getNextDoesTime();
+        System.out.println(time);
+
+
+        System.out.println("Assignment 03");
+        System.out.println(commonToolkit.getSwedishText("\\u7847s6k\\u228da"));
+        //System.out.println(commonToolkit.convertToEnglishFormat(2.5 ,2,5  ));
+
+    }
+}
+ {
+}
