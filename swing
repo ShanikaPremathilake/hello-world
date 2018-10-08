@@ -1,0 +1,60 @@
+import javax.swing.*;
+import java.awt.*;
+
+public class GUIView {
+    public static void main(String[] args) {
+        JFrame frame= new JFrame(("Patient Registration "));
+        frame.setSize(500,500);
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JPanel panel = new JPanel((new GridBagLayout()));
+        frame.getContentPane().add(panel,BorderLayout.WEST);
+        GridBagConstraints c =new GridBagConstraints();
+
+        JLabel namelb1 =new JLabel("Name:");
+        c.gridx=0;
+        c.gridy=0;
+        c.insets=new Insets(10,10,10,10);
+        panel.add(namelb1,c);
+
+        JLabel phoneNumlb1 =new JLabel("Phone number:");
+        c.gridx=0;
+        c.gridy=1;
+        panel.add(phoneNumlb1,c);
+
+        JLabel bdaylb1 =new JLabel("Birthday:");
+        c.gridx=0;
+        c.gridy=2;
+        panel.add(bdaylb1,c);
+
+        JLabel genderlb1 =new JLabel("Gender:");
+        c.gridx=0;
+        c.gridy=3;
+        panel.add(genderlb1,c);
+
+        JLabel addresslb1 =new JLabel("Address:");
+        c.gridx=0;
+        c.gridy=4;
+        panel.add(addresslb1,c);
+
+        JLabel employStatuslb1 =new JLabel("Employment Status:");
+        c.gridx=0;
+        c.gridy=5;
+        panel.add(employStatuslb1,c);
+
+        JButton savebutn=new JButton("Save:");
+        c.gridx=0;
+        c.gridy=6;
+        panel.add(savebutn,c);
+
+       JTextArea phoneNumtxt =new JTextArea("");
+        c.gridx=0;
+        c.gridy=1;
+        panel.add(phoneNumlb1,c);
+//        JLabel lb1 =new JLabel("Address");
+//        c.gridx=0;
+//        c.gridy=0;
+//        panel.add(namelb1,c);
+    }
+
+}
